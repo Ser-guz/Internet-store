@@ -12,17 +12,23 @@ def basket_adding(request):
     data = request.POST
     product_id = data.get('product_id')
     amount = data.get('amount')
+    is_delete = data.get("is_delete")
 
-    # get_or_created - если строка найдена в базе данных, то ничего не делать, если её нет,
-    # то создает новую запись, используя первые 2 поля, 3 поле дается по умолчанию.
-    new_product, created = ProductInBasket.objects.get_or_create(
-        session_key=session_key, product_id=product_id, defaults={"amount": amount})
-    if not created:
-        new_product.amount += int(amount)
-        new_product.save(force_update=True)
+    if is_delete == "true":
+        ProductInBasket.objects.filter(id=product_id).update(is_active=False)
+    else:
+        # get_or_created - если строка найдена в базе данных, то ничего не делать, если её нет,
+        # то создает новую запись, используя первые 2 поля, 3 поле дается по умолчанию.
+        new_product, created = ProductInBasket.objects.get_or_create(session_key=session_key,
+                                                                     product_id=product_id,
+                                                                     is_active=True,
+                                                                     defaults={"amount": amount})
+        if not created:
+            new_product.amount += int(amount)
+            new_product.save(force_update=True)
 
-    products_total_amount = ProductInBasket.objects.filter(
-        session_key=session_key, is_active=True).count()
+    products_total_amount = ProductInBasket.objects.filter(session_key=session_key,
+                                                           is_active=True).count()
     # Назначение элементу словаря по индексу
     return_dict["products_total_amount"] = products_total_amount
 

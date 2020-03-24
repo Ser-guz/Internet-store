@@ -15,6 +15,10 @@ $(document).ready(function() {
     // взятие url из атрибута формы action
     var url = form.attr("action");
 
+    if (is_delete) {
+      data["is_delete"] = true;
+    }
+    var url = form.attr("action");
     console.log(data);
 
     $.ajax({
@@ -26,14 +30,14 @@ $(document).ready(function() {
       success: function(data) {
         console.log("OK");
         console.log(data.products_total_amount);
-        if (data.products_total_amount) {
+        if (data.products_total_amount || data.products_total_amount == 0) {
           $("#basket-total-amount").text(
             "(" + data.products_total_amount + ")"
           );
           console.log(data.products);
+          $(".basket-items ul").html(""); // очищение кода html внутри блока, в которой функция делает запись.
           // Проход по каждому элементу, у которого k - это индекс, v - значение
           $.each(data.products, function(k, v) {
-            $(".basket-items ul").html(""); // очищение кода html внутри блока, в которой функция делает запись.
             $(".basket-items ul").append(
               "<li>" +
                 v.name +
