@@ -1,0 +1,62 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Интернет-магазин</title>
+
+    <!-- Bootstrap-->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css"
+    />
+    <!-- Custor font-->
+    <link
+      href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Custor style-->
+    <link rel="stylesheet" href="{% static 'landing.css' %}" />
+  </head>
+  <body>
+    <div class="general-container">
+      <div class="container top-container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2">
+            <h1 class="title">
+              Наш магазин скоро откроемся<br />
+              Оставляйте Ваши контакты по форме ниже
+            </h1>
+          </div>
+
+          <div>
+            <form action="" method="POST" class="form-inline text-center">
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="email">Вам email: </label>
+                <input
+                  type="text"
+                  name="{{ form.email.name }}"
+                  class="form-control"
+                  id="email"
+                />
+              </div>
+              <div class="form-group">
+                <label for="name">Ваше имя: </label>
+                <input
+                  type="text"
+                  name="{{ form.name.name }}"
+                  class="form-control"
+                  id="name"
+                />
+              </div>
+              <button type="submit" class="btn btn-success">Отправить</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
