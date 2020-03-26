@@ -1,0 +1,22 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      <h3>Товары в корзине</h3>
+      <h5>Общая стоимость:</h5>
+
+      <ul>
+        {% for product_in_basket in products_in_basket %}
+        <li>
+          {{ product_in_basket.product.name }}, {{product_in_basket.amount }}
+          шт. по {{ product_in_basket.price_per_item }} руб. =
+          {{ product_in_basket.price_total }} руб.
+          <a class="delete-item" href="" data-product_id="{{ product.id }}">x</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock content %}
