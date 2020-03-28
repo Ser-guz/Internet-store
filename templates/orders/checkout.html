@@ -4,51 +4,71 @@
   <div class="row">
     <div class="col-lg-8 col-lh-offset-2">
       <h3>Товары в корзине</h3>
+      <br>
       <h5>Общая стоимость:</h5>
+      {{ form.non_field_errors }}
+      <!-- Контактные данные покупателя -->
+      <div>
+        <form action="" method="POST">
+          {% csrf_token %}
+          <div class=" form-group">
+            <label for="name">Имя: </label>
+            <!-- <span class="form-error">{{ form.name.errors }}</span> -->
+            <!-- Сообщение об неверном типе введенных данных -->
+            <input type="text" class="form-control" name="{{ form.name.html_name }}" id="name" />
+          </div>
+          <div class="form-group">
+            <label for="phone">Телефон: </label>
+            <!-- <span class="form-error">{{ form.phone.errors }}</span> -->
+            <!-- Сообщение об неверном типе введенных данных -->
+            <input type="text" class="form-control" name="{{ form.phone.html_name }}" id="phone" />
+          </div>
+          <br>
 
-      <form>
-        <table class="table text-left">
-          <thead>
-            <tr>
-              <th>Название</th>
-              <th>Количество</th>
-              <th>Цена за единицу</th>
-              <th>Общая цена</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for product_in_basket in products_in_basket %}
-            <tr>
-              <td>{{ product_in_basket.product.name }}</td>
-              <td>
-                <input value="{{ product_in_basket.amount }}" type="number" class="product-in-basket-amount" />
-              </td>
-              <td>
-                <span class="product-price">
-                  {{ product_in_basket.price_per_item }}
-                </span>
-              </td>
-              <td>
-                <!-- В jQuery может вызываться только один id, поэтому для второго вызова используем класс. -->
-                <span class="total-product-in-basket-price">
-                  {{ product_in_basket.price_total }}
-                </span>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-        <div class="text-right">
-          <b>Сумма заказа: </b><span id="total_order_price"></span>
-        </div>
+          <!-- Таблица покупок -->
+          <table class="table text-left">
+            <thead>
+              <tr>
+                <th>Название</th>
+                <th>Количество</th>
+                <th>Цена за единицу</th>
+                <th>Общая цена</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for product_in_basket in products_in_basket %}
+              <tr>
+                <td>{{ product_in_basket.product.name }}</td>
+                <td>
+                  <input value="{{ product_in_basket.amount }}" type="number" class="product-in-basket-amount "
+                    name="product_in_basket_{{ product_in_basket.id }}" />
+                </td>
+                <td>
+                  <span class="product-price">
+                    {{ product_in_basket.price_per_item }}
+                  </span>
+                </td>
+                <td>
+                  <!-- В jQuery может вызываться только один id, поэтому для второго вызова используем класс. -->
+                  <span class="total-product-in-basket-price">
+                    {{ product_in_basket.price_total }}
+                  </span>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
 
-        <div class="text-right">
-          <button type="submit" class="btn btn-primary btn-lg">Заказать</button>
-        </div>
-
-
-      </form>
+          <!-- Сумма заказа -->
+          <div class="text-right">
+            <b>Сумма заказа: </b><span id="total_order_price"></span>
+          </div>
+          <br>
+          <div class="text-right">
+            <button type="submit" class="btn btn-primary btn-lg btn-check">Заказать</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-</div>
-{% endblock content %}
+  {% endblock content %}

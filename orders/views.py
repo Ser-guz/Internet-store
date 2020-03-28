@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from .models import ProductInBasket
+from .forms import CheckoutContactForm
+from django.contrib.auth.models import User
 
 
 def basket_adding(request):
@@ -56,4 +58,24 @@ def checkout(request):
     session_key = request.session.session_key
     products_in_basket = ProductInBasket.objects.filter(session_key=session_key,
                                                         is_active=True)
+    form = CheckoutContactForm(request.POST or None)
+
+    # Почему запрос имеет метод POST еще только при запуске? Ведь должен быть get.
+    if request.method == "POST":
+        print(request.POST)
+        if form.is_valid():
+            print("Да, хорошо.")
+            data = request.POST
+            name = data.get("name")
+            phone = data["phone"]
+            user, created = User.objects.get_or_create(
+                username=phone, defaults={"first_name": name})
+
+            for name, value in data.items():  # проход циклом по словарю с помощью двух аргументов и функции items()
+                if name.startswith("product_in_basket_"):
+                    id = name.split("product_in_basket_")
+                    print(id)
+        else:
+            print("Нет, не подходят контактные данные")
+
     return render(request, 'orders/checkout.html', locals())
