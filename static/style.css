@@ -99,3 +99,7 @@ body {
 .btn-check {
   line-height: 1;
 }
+
+.form-error {
+  color: red;
+}

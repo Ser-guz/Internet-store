@@ -75,7 +75,7 @@ class ProductInOrder(models.Model):
     def save(self, *args, **kwargs):
         price_per_item = self.product.price
         self.price_per_item = price_per_item
-        self.price_total = self.amount * price_per_item
+        self.price_total = int(self.amount) * price_per_item
 
         super(ProductInOrder, self).save(*args, **kwargs)
 

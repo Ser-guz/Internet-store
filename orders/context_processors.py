@@ -10,7 +10,7 @@ def getting_basket_info(request):
         request.session.cycle_key()
 
     products_in_basket = ProductInBasket.objects.filter(
-        session_key=session_key, is_active=True)
+        session_key=session_key, is_active=True, order__isnull=False)
     products_total_amount = products_in_basket.count()
 
     return locals()

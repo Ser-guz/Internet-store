@@ -2,28 +2,27 @@
 
 <div class="container">
   <div class="row">
+    {% if products_in_basket %}
     <div class="col-lg-8 col-lh-offset-2">
       <h3>Товары в корзине</h3>
       <br>
-      <h5>Общая стоимость:</h5>
-      {{ form.non_field_errors }}
+
       <!-- Контактные данные покупателя -->
       <div>
-        <form action="" method="POST">
-          {% csrf_token %}
+        <form action="" method="POST">{% csrf_token %}
           <div class=" form-group">
             <label for="name">Имя: </label>
-            <!-- <span class="form-error">{{ form.name.errors }}</span> -->
+            <span class="form-error">{{ form.name.errors }}</span>
             <!-- Сообщение об неверном типе введенных данных -->
             <input type="text" class="form-control" name="{{ form.name.html_name }}" id="name" />
           </div>
           <div class="form-group">
             <label for="phone">Телефон: </label>
-            <!-- <span class="form-error">{{ form.phone.errors }}</span> -->
+            <span class="form-error">{{ form.phone.errors }}</span>
             <!-- Сообщение об неверном типе введенных данных -->
             <input type="text" class="form-control" name="{{ form.phone.html_name }}" id="phone" />
           </div>
-          <br>
+          </br>
 
           <!-- Таблица покупок -->
           <table class="table text-left">
@@ -70,5 +69,8 @@
         </form>
       </div>
     </div>
+    {% else %}
+    <h3 class="text-center">В Вашей корзине нет товаров</h3>
+    {% endif %}
   </div>
   {% endblock content %}

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from .models import ProductInBasket
+from .models import *
 from .forms import CheckoutContactForm
 from django.contrib.auth.models import User
 
@@ -71,10 +71,24 @@ def checkout(request):
             user, created = User.objects.get_or_create(
                 username=phone, defaults={"first_name": name})
 
+            order = Order.objects.create(
+                user=user, customer_name=name, customer_phone=phone, status_id=1, order__isnull=False)
             for name, value in data.items():  # проход циклом по словарю с помощью двух аргументов и функции items()
                 if name.startswith("product_in_basket_"):
-                    id = name.split("product_in_basket_")
-                    print(id)
+                    product_in_basket_id = name.split("product_in_basket_")[1]
+                    product_in_basket = ProductInBasket.objects.get(
+                        id=product_in_basket_id)
+                    product_in_basket.amount = value
+                    product_in_basket.order = order
+                    product_in_basket.save(force_update=True)
+
+                    # Создание продуктов в заказе с соответствующими свойствами
+                    ProductInOrder.objects.create(
+                        product=product_in_basket.product,
+                        amount=product_in_basket.amount,
+                        price_per_item=product_in_basket.price_per_item,
+                        price_total=product_in_basket.price_total,
+                        order=order)
         else:
             print("Нет, не подходят контактные данные")
 
