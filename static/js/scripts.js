@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  var form = $("#form_buying_product");
+  var form = $(".form_buying");
   console.log(form);
 
   function basket_updating(product_id, amount, is_delete) {
@@ -9,7 +9,7 @@ $(document).ready(function () {
 
     // Защита формы
     var csrf_token = $(
-      '#form_buying_product [name="csrfmiddlewaretoken"]'
+      '.form_buying [name="csrfmiddlewaretoken"]'
     ).val();
     data["csrfmiddlewaretoken"] = csrf_token;
     // взятие url из атрибута формы action

@@ -37,7 +37,6 @@ def basket_adding(request):
     # Создание списка в качестве элемента словаря
     return_dict['products'] = list()
 
-    # Костыль - это переменная должна была загрузиться из context_processors
     products_in_basket = ProductInBasket.objects.filter(session_key=session_key,
                                                         is_active=True)
 
