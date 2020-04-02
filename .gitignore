@@ -1,0 +1,5 @@
+'#' Ignore files:
+*orders/__pycache__/
+*orders/node_modules/
+*orders/.vscode/
+*package-lock.json

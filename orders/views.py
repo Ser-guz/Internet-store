@@ -71,7 +71,7 @@ def checkout(request):
                 username=phone, defaults={"first_name": name})
 
             order = Order.objects.create(
-                user=user, customer_name=name, customer_phone=phone, status_id=1, order__isnull=False)
+                user=user, customer_name=name, customer_phone=phone, status_id=1)
             for name, value in data.items():  # проход циклом по словарю с помощью двух аргументов и функции items()
                 if name.startswith("product_in_basket_"):
                     product_in_basket_id = name.split("product_in_basket_")[1]
