@@ -1,10 +1,8 @@
 from django.shortcuts import render
-from products.models import *
-from django.views.decorators.csrf import csrf_protect
+from .models import *
 
 
-@csrf_protect
-def ProductView(request, product_id):
+def product_view(request, product_id):
     product = Product.objects.get(id=product_id)
 
     session_key = request.session.session_key
