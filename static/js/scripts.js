@@ -8,17 +8,15 @@ $(document).ready(function () {
     data.amount = amount;
 
     // Защита формы
-    var csrf_token = $(
-      '.form_buying [name="csrfmiddlewaretoken"]'
+    data["csrfmiddlewaretoken"] = $(
+        '.form_buying [name="csrfmiddlewaretoken"]'
     ).val();
-    data["csrfmiddlewaretoken"] = csrf_token;
     // взятие url из атрибута формы action
     var url = form.attr("action");
 
     if (is_delete) {
       data["is_delete"] = true;
     }
-    var url = form.attr("action");
     console.log(data);
 
     $.ajax({
@@ -30,7 +28,8 @@ $(document).ready(function () {
       success: function (data) {
         console.log("OK");
         console.log(data.products_total_amount);
-        if (data.products_total_amount || data.products_total_amount == 0) {
+
+        if (data.products_total_amount || data.products_total_amount === 0) {
           $("#basket-total-amount").text(
             "(" + data.products_total_amount + ")"
           );

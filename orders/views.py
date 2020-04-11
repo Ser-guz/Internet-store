@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from .models import *
 from .forms import CheckoutContactForm
 from django.contrib.auth.models import User
+from django.views.generic import CreateView
 
 
 def basket_adding(request):
@@ -55,40 +56,40 @@ def basket_adding(request):
 
 def checkout(request):
     session_key = request.session.session_key
-    products_in_basket = ProductInBasket.objects.filter(session_key=session_key,
-                                                        is_active=True)
+    products_in_basket = ProductInBasket.objects.filter(session_key=session_key, is_active=True)
     form = CheckoutContactForm(request.POST or None)
 
-    # Почему запрос имеет метод POST еще только при запуске? Ведь должен быть get.
     if request.method == "POST":
         print(request.POST)
         if form.is_valid():
             print("Да, хорошо.")
+            # Получение из базы данных покупателя или создание нового
             data = request.POST
             name = data.get("name")
             phone = data["phone"]
             user, created = User.objects.get_or_create(
                 username=phone, defaults={"first_name": name})
 
-            order = Order.objects.create(
-                user=user, customer_name=name, customer_phone=phone, status_id=1)
+            # Создание нового заказа
+            order = Order.objects.create(user=user, customer_name=name, customer_phone=phone, status_id=1)
             for name, value in data.items():  # проход циклом по словарю с помощью двух аргументов и функции items()
                 if name.startswith("product_in_basket_"):
                     product_in_basket_id = name.split("product_in_basket_")[1]
-                    product_in_basket = ProductInBasket.objects.get(
-                        id=product_in_basket_id)
+                    product_in_basket = ProductInBasket.objects.get(id=product_in_basket_id)
                     product_in_basket.amount = value
                     product_in_basket.order = order
                     product_in_basket.save(force_update=True)
 
                     # Создание продуктов в заказе с соответствующими свойствами
-                    ProductInOrder.objects.create(
-                        product=product_in_basket.product,
-                        amount=product_in_basket.amount,
-                        price_per_item=product_in_basket.price_per_item,
-                        price_total=product_in_basket.price_total,
-                        order=order)
+                    ProductInOrder.objects.create(product=product_in_basket.product,
+                                                  amount=product_in_basket.amount,
+                                                  price_per_item=product_in_basket.price_per_item,
+                                                  price_total=product_in_basket.price_total,
+                                                  order=order)
         else:
             print("Нет, не подходят контактные данные")
 
-    return render(request, 'orders/checkout.html', locals())
+    context = {"form": form,
+               "products_in_basket": products_in_basket}
+
+    return render(request, 'orders/checkout.html', context)
